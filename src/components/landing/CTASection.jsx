@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CTASection = () => {
+const CTASection = ({openSignUp}) => {
   return (
     <div className="bg-purple-500">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
@@ -14,7 +14,8 @@ const CTASection = () => {
         </h2>
         <div className="mt-8 flex lg:mt-0 lg:flex-shrinl-0">
             <div className="inline-flex rounded-md shadow">
-              <button className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-purple-600 bg-white hover:bg-purple-50 transiton-colors duration-200">
+              <button onClick={()=>openSignUp()} className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-purple-600 bg-white hover:bg-purple-50 transiton-colors duration-200">
+                 
                 Sign Up for free
               </button>
             </div>

@@ -5,7 +5,7 @@ import MyFiles from "./pages/MyFiles";
 import Subscription from "./pages/Subscription";
 import Transactions from "./pages/Transactions";
 import Upload from "./pages/Upload";
-import { RedirectToSignIn, SignedIn ,SignedOut} from "@clerk/react";
+import { RedirectToSignIn, SignedIn ,SignedOut} from "@clerk/clerk-react";
 
 const App=()=>{
   return (

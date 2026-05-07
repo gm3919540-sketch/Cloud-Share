@@ -6,7 +6,7 @@ import TestimonialsSections from '../components/landing/TestimonialsSections'
 import CTASection from '../components/landing/CTASection'
 import FooterSection from '../components/landing/FooterSection'
 import { features, pricingPlans, testimonials } from '../assets/data'
-import { useClerk, useUser } from '@clerk/react'
+import { useClerk, useUser } from '@clerk/clerk-react'
 import { useNavigate } from 'react-router-dom'
 
 const Landing = () => {
@@ -31,13 +31,13 @@ const Landing = () => {
 
     {/* Pricing Section */}
 
-    <PricingSection pricingPlans={pricingPlans} />
+    <PricingSection pricingPlans={pricingPlans} openSignUp ={openSignUp} />
 
     {/* Testimone=ial Section */}
     <TestimonialsSections testimonials={testimonials} />
 
     {/* CTA  Section */}
-    <CTASection/>
+    <CTASection openSignUp={openSignUp}/>
 
     {/* Footer Section */}
     <FooterSection/>
