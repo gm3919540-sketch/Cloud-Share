@@ -1,8 +1,11 @@
+import { UserButton } from '@clerk/react'
 import React from 'react'
 
 const Dashboard = () => {
   return (
-    <div>Dashboard</div>
+    <div>
+      <UserButton></UserButton>
+       </div>
   )
 }
 

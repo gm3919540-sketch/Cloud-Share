@@ -5,17 +5,44 @@ import MyFiles from "./pages/MyFiles";
 import Subscription from "./pages/Subscription";
 import Transactions from "./pages/Transactions";
 import Upload from "./pages/Upload";
+import { RedirectToSignIn, SignedIn ,SignedOut} from "@clerk/react";
 
 const App=()=>{
   return (
     <BrowserRouter>
     <Routes>
       <Route path="/" element={<Landing />}></Route>
-      <Route path="/dashboard" element={<Dashboard />}></Route>
-      <Route path="/upload" element={<Upload />}></Route>
-      <Route path="/my-files" element={<MyFiles />}></Route>
-      <Route path="/subscriptions" element={<Subscription />}></Route>
-      <Route path="/Transactions" element={<Transactions />}></Route>
+      <Route path="/dashboard" element={
+        <>
+        <SignedIn><Dashboard /></SignedIn>
+        <SignedOut><RedirectToSignIn /> </SignedOut>
+        </>
+      }></Route>
+      <Route path="/upload" element={
+         <>
+        <SignedIn><Upload /></SignedIn>
+        <SignedOut><RedirectToSignIn /> </SignedOut>
+        </>
+      }></Route>
+      <Route path="/my-files" element={
+         <>
+        <SignedIn><MyFiles /></SignedIn>
+        <SignedOut><RedirectToSignIn /> </SignedOut>
+        </>
+      }></Route>
+      <Route path="/subscriptions" element={
+         <>
+        <SignedIn><Subscription /></SignedIn>
+        <SignedOut><RedirectToSignIn /> </SignedOut>
+        </>
+      }></Route>
+      <Route path="/Transactions" element={
+         <>
+        <SignedIn><Transactions /></SignedIn>
+        <SignedOut><RedirectToSignIn /> </SignedOut>
+        </>
+      }></Route>
+      <Route path="/*" element={<RedirectToSignIn />} />
        
     </Routes>
     </BrowserRouter>
