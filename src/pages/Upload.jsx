@@ -1,8 +1,11 @@
 import React from 'react'
+import DashboardLayout from '../layout/DashboardLayout'
 
 const Upload = () => {
   return (
+  <DashboardLayout activeMenu="Upload">
     <div>Upload</div>
+  </DashboardLayout>
   )
 }
 

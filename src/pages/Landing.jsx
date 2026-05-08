@@ -18,7 +18,6 @@ const Landing = () => {
    if(isSignedIn){
            navigate("/dashboard");
    }
-
  },[isSignedIn,navigate]);
 
   return (
