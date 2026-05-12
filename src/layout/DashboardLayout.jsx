@@ -15,7 +15,7 @@ function DashboardLayout({children,activeMenu}) {
                 {/* sidemenu goes here */}
                 <SideMenu activeMenu={activeMenu} />
             </div>
-            <div className="class mx-5">{children}</div>
+            <div className="flex-1 w-full mx-5">{children}</div>
         </div>
     )}
    </div>
