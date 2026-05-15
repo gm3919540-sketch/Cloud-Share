@@ -19,6 +19,7 @@ export const UserCreditsProvider =({children})=>{
          const response=   await axios.get(apiEndpoints.GET_CREDITS,{headers:{Authorization: `Bearer ${token}`}});
          if(response.status ===200){
             setCredits(response.data.credits);
+            console.log(response.data);
          }else {
             toast.error('Unable tp get the credits',error);
          }

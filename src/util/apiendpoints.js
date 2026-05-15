@@ -6,4 +6,5 @@ export const apiEndpoints ={
    DOWNLOAD_FILE:(id)=>`${BASE_URL}/files/download/${id}`,
    DELETE_FILE: (id)=>`${BASE_URL}/files/${id}`,
    GET_CREDITS:`${BASE_URL}/users/credits`,
+   UPLOAD_FILE: `${BASE_URL}/files/upload`,
 }
