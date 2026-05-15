@@ -14,7 +14,7 @@ import {
 
 import React, { useState } from 'react';
 
-function FileCard({ file }) {
+function FileCard({ file,onDelete,onTogglePublic,onDownload,onShareLink}) {
 
   const [showActions, setShowActions] = useState(false);
 
@@ -131,6 +131,7 @@ function FileCard({ file }) {
 
           {file.isPublic && (
             <button
+            onClick={()=>onShareLink(false.id)}
               title="Share Link"
               className="p-2 bg-white/90 rounded-full hover:bg-white transition-colors text-purple-500 hover:text-purple-600"
             >
@@ -151,13 +152,15 @@ function FileCard({ file }) {
           )}
 
           <button
+          onClick={()=>onDownload(file)}
             title='Download'
-            className="p-2 bg-white/90 rounded-full cursor-pointer hover:bg-white transition-colors text-green-600 hover:text-green-700"
+            className="p-2 cursor-pointer bg-white/90 rounded-full cursor-pointer hover:bg-white transition-colors text-green-600 hover:text-green-700"
           >
             <Download size={18} />
           </button>
 
           <button
+          onClick={()=>onTogglePublic(file)}
             title={file.isPublic ? "Make Private" : "Make Public"}
             className='p-2 bg-white/90 rounded-full cursor-pointer hover:bg-white transition-colors text-amber-600 hover:text-amber-700'
           >
@@ -169,6 +172,7 @@ function FileCard({ file }) {
           </button>
 
           <button
+          onClick={()=>onDelete(file.id)}
             title='Delete'
             className="p-2 bg-white/90 rounded-full cursor-pointer hover:bg-white transition-colors text-red-600 hover:text-red-700"
           >

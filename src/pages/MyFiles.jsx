@@ -6,16 +6,33 @@ import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import FileCard from '../components/FileCard';
 import {Copy,Download,Eye,File,FileIcon,FileText,Globe,Grid,List,Lock,Trash2,Image,Music,Video} from 'lucide-react';
+import { apiEndpoints } from '../util/apiendpoints';
+import ConfirmationDialog from '../components/ConfirmationDialog';
+import LinkShareModal from '../components/LinkShareModel';
 
 const MyFiles = () => {
   const [files,setFiles] = useState([]);
   const[viewMode,setViewMode] = useState("list");
   const {getToken}= useAuth();
+  
   const navigate = useNavigate();
+  const [deleteConfirmation,setDeleteConfirmation]=useState({
+       isOpen:false,
+       fileId:null
+  });
+
+  const[shareModel,setShareModel] = useState({
+     isOpen:false,
+     fileId:null,
+     link:"",
+  })
+   
+  //fetching file sfor loged in user
   const fetchFiles = async()=>{
     try{
      const token = await getToken();
-   const response = await axios.get('http://localhost:8080/api/v1.0/files/my',{headers :{Authorization:`Bearer ${token}`}});
+     console.log(token);
+   const response = await axios.get(apiEndpoints.FETCH_FILES,{headers :{Authorization:`Bearer ${token}`}});
    console.log(response);
    if(response.status ==200){
     setFiles(response.data);
@@ -25,6 +42,98 @@ const MyFiles = () => {
        toast.error('error fetchign the files from server', error.message)
     }
   }
+
+  //Toggles the public status of a file
+  const togglePublic = async(fileToUpdate)=>{ 
+    try{
+        const token = await getToken();
+         await axios.patch(apiEndpoints.TOGGLE_FILE(fileToUpdate.id),{},{headers:{Authorization :`Bearer ${token}`}});
+         setFiles(files.map((file)=> file.id==fileToUpdate.id?{...file,isPublic: !file.isPublic}:file));
+    }catch(error){
+          console.error("Error toggling file stauts",error);
+          toast.error('Error toggling file status',error.message);
+    }
+  }
+
+  //handle file Download
+  const handleDownload=async(file)=>{
+    try{
+        const token = await getToken();
+        const response= await axios.get(apiEndpoints.DOWNLOAD_FILE(file.id),{headers :{Authorization: `Bearer ${token}`}, responseType: "blob"});
+        //create a bob url and trigger Download
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href=url;
+        link.setAttribute("download",file.name)
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url); //clean up the object url
+    }catch (error){
+      toast.error(`Error downloading file`,error.message); 
+    }
+  }
+    //closes the delete confirmation model
+  const closeDeleteConfirmation =()=>{
+     setDeleteConfirmation({
+      isOpen:false,
+      fileId:null
+     })
+  }
+   
+  //Opens the delete confirmation model
+  const openDeleteConfirmation =(fileId)=>{
+       setDeleteConfirmation({
+        isOpen:true,
+        fileId
+       })
+  }
+   
+  //opens the share link modal
+  const openShareModel= (fileId)=>{
+    const link =`${window.location.origin}/file/${fileId}`;
+    setShareModel({
+      isOpen:true,
+      fileId,
+      link
+    });
+  }
+
+
+  //close the share link model
+  const closeShareModel=()=>{
+    setShareModel({
+    isOpen:false,
+    fileId:null,
+    link:""
+    });
+  };
+  
+  
+
+
+  
+
+
+
+  //Delete a file after confirmation
+  const handleDelete =async()=>{
+   const fileId =  deleteConfirmation.fileId;
+   if(!fileId) return;
+   try{
+    const token = await getToken();
+   const respons= await axios.delete(apiEndpoints.DELETE_FILE(fileId),{headers:{Authorization:`Bearer ${token}`}});
+   if(respons.status==204){
+     setFiles(files.filter((file)=>file.id!=fileId));
+     closeDeleteConfirmation();
+   } else{
+    toast.error('Error deleting file');
+   }
+   }catch(error){
+         console.error("Error deleting file",error.message)
+   }
+  }
+
   useEffect(()=>{
     fetchFiles();
   },[getToken])
@@ -98,6 +207,10 @@ const MyFiles = () => {
                 <FileCard
                    key={file.id}
                    file ={file}
+                   onDelete ={openDeleteConfirmation}
+                   onTogglePublic ={togglePublic}
+                   onDownload ={handleDownload}
+                   onShareLink ={openShareModel}
                 />
               ))}
             </div>
@@ -133,8 +246,9 @@ const MyFiles = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                        <div className="flex-items-center gap-4">
                         <button
+                        onClick={()=>togglePublic(file)}
                         className="flex items-center gap-2 cursor-pointer group">
-                         {file.public?(
+                         {file.isPublic?(
                              <>
                              <Globe size={16} className='text-green-500'/>
                              <span className='group-hover:underline'>
@@ -151,7 +265,9 @@ const MyFiles = () => {
                          )}
                         </button>
                         {file.isPublic && (
-                          <button className="flex items-center gap-2 cursor-pointer group text-blue-600">
+                          <button
+                          onClick={()=>openShareModel(file.id)}
+                          className="flex items-center gap-2 cursor-pointer group text-blue-600">
                             <Copy size={16} />
                             <span className='group-hover:underline'>
                               Share Link
@@ -164,6 +280,7 @@ const MyFiles = () => {
                         <div className="grid grid-cols-3 gap-4">
                           <div className="flex justify-center">
                            <button
+                           onClick={()=>handleDownload(file)}
                              title='Download'
                              className="text-gray-500 hover:text-blue-600">
                              <Download size={18}/>
@@ -171,6 +288,7 @@ const MyFiles = () => {
                           </div>
                           <div className="flex-justify-center">
                             <button
+                            onClick={()=>openDeleteConfirmation(file.id)}
                              title='Delete'
                             className="text-gray-500 hover:text-red-600">
                               <Trash2 size={18} />
@@ -196,6 +314,26 @@ const MyFiles = () => {
             </table>
           </div>
         )}
+        {/* Dlete confirmatipn dialog */}
+        <ConfirmationDialog
+        isOpen ={deleteConfirmation.isOpen}
+        onClose={closeDeleteConfirmation}
+        title="Delete File"
+        message="Are you sure want to delete this file?this action cannot be undone"
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={handleDelete}
+        // onConfirm={handleDelete}
+        confirmationButtonClass='bg-red-600 hover:bg-red-700'
+        />
+         {/* Share link midel*/}
+         <LinkShareModal
+         isOpen={shareModel.isOpen}
+         onClose={closeShareModel}
+         link={shareModel.link}
+         title="Share File"
+         />
+
       </div>
    </DashboardLayout>
   )
