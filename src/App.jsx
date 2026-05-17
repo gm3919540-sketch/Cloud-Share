@@ -8,6 +8,7 @@ import Upload from "./pages/Upload";
 import { RedirectToSignIn, SignedIn ,SignedOut} from "@clerk/clerk-react";
 import { Toaster } from "react-hot-toast";
 import { UserCreditsProvider } from "./context/UserCreditContext";
+import PublicFileView from "./components/PublicFileView";
 
 const App=()=>{
   return (
@@ -46,6 +47,11 @@ const App=()=>{
         <SignedOut><RedirectToSignIn /> </SignedOut>
         </>
       }></Route>
+      <Route path="file/:fileId" element ={
+        <>
+        <PublicFileView/>
+        </>
+      } ></Route>
       <Route path="/*" element={<RedirectToSignIn />} />
        
     </Routes>
