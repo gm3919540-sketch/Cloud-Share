@@ -12,7 +12,7 @@ REST API communication
 Global state management using Context API
 Protected routes
 Dynamic frontend rendering
-🛠 Tech Stack
+Tech Stack
 Frontend
 React
 React Router DOM
