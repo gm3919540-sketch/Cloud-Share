@@ -54,7 +54,7 @@ src/
 
 
 
-# 🔐 Authentication Flow
+#  Authentication Flow
 
 * User logs in using Clerk authentication
 * JWT/auth token is attached with API requests
@@ -63,7 +63,7 @@ src/
 
 
 
-# 💳 Payment Integration
+#  Payment Integration
 
 CloudShare integrates with Razorpay for:
 
@@ -75,7 +75,7 @@ CloudShare integrates with Razorpay for:
 
 
 
-# 📸 Main Functionalities
+#  Main Functionalities
 
 ## File Upload
 
@@ -109,16 +109,6 @@ Through this project, I gained hands-on experience in:
 
 
 
-#  Future Improvements
-
-* AWS S3 integration
-* Redis caching
-* Drag & drop uploads
-* File encryption
-* Email notifications
-* Chunk file uploads
-* CI/CD pipeline
-* Unit & integration testing
 
 
 
